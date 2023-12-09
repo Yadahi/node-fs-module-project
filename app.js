@@ -1,13 +1,13 @@
 const fs = require("fs/promises");
+import { createFile, deleteFile, renameFile, addToFile } from "./helpers";
+
+// Commands
+const CREATE_FILE = "create a file";
+const DELETE_FILE = "delete a file";
+const RENAME_FILE = "rename a file to file";
+const ADD_TO_FILE = "add the file";
 
 (async () => {
-  // Commands
-  const CREATE_FILE = "create a file";
-  const createFile = (path) => {
-    console.log("path", path);
-    fs.writeFile(path, "test");
-  };
-
   const commandFileHandler = await fs.open("./command.txt", "r");
 
   commandFileHandler.on("change", async () => {
@@ -29,10 +29,28 @@ const fs = require("fs/promises");
 
     // create a file:
     // create a file <path>
-
     if (command.includes(CREATE_FILE)) {
       const filePath = command.substring(CREATE_FILE.length + 1);
       createFile(filePath);
+    }
+
+    // delete a file
+    // delete the file path
+    if (command.includes(DELETE_FILE)) {
+      const filePath = command.substring(DELETE_FILE.length + 1);
+      deleteFile(filePath);
+    }
+
+    // rename file
+    if (command.includes(RENAME_FILE)) {
+      const index = command.indexOf(" to ");
+      const oldFilePath = command.substring(RENAME_FILE.length + 1, index);
+      const newFilePath = command.substring(index + 4);
+
+      renameFile(oldFilePath, newFilePath);
+    }
+
+    if (command.includes(ADD_TO_FILE)) {
     }
   });
 
