@@ -1,10 +1,11 @@
 const fs = require("fs/promises");
-import { createFile, deleteFile, renameFile, addToFile } from "./helpers";
+
+const { createFile, deleteFile, renameFile, addToFile } = require("./helpers");
 
 // Commands
 const CREATE_FILE = "create a file";
 const DELETE_FILE = "delete a file";
-const RENAME_FILE = "rename a file to file";
+const RENAME_FILE = "rename a file";
 const ADD_TO_FILE = "add the file";
 
 (async () => {
@@ -50,7 +51,15 @@ const ADD_TO_FILE = "add the file";
       renameFile(oldFilePath, newFilePath);
     }
 
+    // add to file
+    // add to the file <path> this content <content>
     if (command.includes(ADD_TO_FILE)) {
+      const index = command.indexOf(" this content: ");
+      const filePath = command.substring(ADD_TO_FILE.length + 1, index);
+
+      const content = command.substring(index + 15);
+
+      addToFile(filePath, content);
     }
   });
 

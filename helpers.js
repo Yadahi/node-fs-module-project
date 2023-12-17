@@ -1,4 +1,6 @@
-export const createFile = async (path) => {
+const fs = require("fs/promises");
+
+const createFile = async (path) => {
   try {
     // we check if we already have the file
     const existingFileHandle = await fs.open(path, "r");
@@ -13,14 +15,50 @@ export const createFile = async (path) => {
   }
 };
 
-export const deleteFile = async (path) => {
+const deleteFile = async (path) => {
   console.log("deleting file");
+  console.log("path", path);
+  try {
+    await fs.unlink(path);
+    console.log("The file was successfully deleted");
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      console.log("No file at this path to remove.");
+    } else {
+      console.log("An error occurred while removing the file: ");
+      console.log(error);
+    }
+  }
 };
 
-export const renameFile = async (path, newPath) => {
-  console.log("renaming old path to new path");
+const renameFile = async (path, newPath) => {
+  console.log(`renaming ${path} to ${newPath}`);
+  try {
+    await fs.rename(path, newPath);
+    console.log("The file was successfully renamed.");
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      console.log(
+        "No file at this path to rename, or the destination doesn't exist."
+      );
+    } else {
+      console.log("An error occurred while renaming the file: ");
+      console.log(error);
+    }
+  }
 };
 
-export const addToFile = async (path, content) => {
+const addToFile = async (path, content) => {
   console.log("adding to this path");
+
+  try {
+    const fileHandle = await fs.open(path, "a");
+    fileHandle.write(content);
+    console.log("The content was added successfully.");
+  } catch (error) {
+    console.log("An error occurred while removing the file: ");
+    console.log(error);
+  }
 };
+
+module.exports = { createFile, deleteFile, renameFile, addToFile };
