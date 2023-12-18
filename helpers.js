@@ -17,7 +17,6 @@ const createFile = async (path) => {
 
 const deleteFile = async (path) => {
   console.log("deleting file");
-  console.log("path", path);
   try {
     await fs.unlink(path);
     console.log("The file was successfully deleted");
@@ -48,12 +47,17 @@ const renameFile = async (path, newPath) => {
   }
 };
 
+let addedContent;
 const addToFile = async (path, content) => {
   console.log("adding to this path");
+  if (addedContent === content) {
+    return;
+  }
 
   try {
     const fileHandle = await fs.open(path, "a");
     fileHandle.write(content);
+    addedContent = content;
     console.log("The content was added successfully.");
   } catch (error) {
     console.log("An error occurred while removing the file: ");
